@@ -12,6 +12,8 @@ contract TouristRegistry is Ownable {
     mapping(bytes32 => bool) private _isHashRegistered;
     // Mapping from the new ID to the hash
     mapping(uint256 => bytes32) private _idToHashMap;
+    // ✅ ADDED: Mapping from the hash to the new ID for easy lookup
+    mapping(bytes32 => uint256) private _hashToIdMap;
 
     constructor(address initialOwner) Ownable(initialOwner) {}
 
@@ -28,10 +30,19 @@ contract TouristRegistry is Ownable {
 
         _isHashRegistered[dataHash] = true;
         _idToHashMap[newId] = dataHash;
+        _hashToIdMap[dataHash] = newId; // ✅ ADDED: Store the reverse mapping
 
         emit TouristRegistered(newId, dataHash, msg.sender);
 
         return newId;
+    }
+
+    /**
+     * ✅ ADDED: Getter function to retrieve the Digital ID from a hash.
+     */
+    function getDigitalId(bytes32 dataHash) external view returns (uint256) {
+        require(_isHashRegistered[dataHash], "Tourist hash not found.");
+        return _hashToIdMap[dataHash];
     }
 
     /**

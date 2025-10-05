@@ -51,7 +51,21 @@ describe("TouristRegistry Contract", function () {
   });
 
 
+  it("Should return a unique Digital ID for a registered hash", async function () {
+    // 1. INPUT -> Prepare a hash digest
+    const dataHash = ethers.encodeBytes32String("test-for-digital-id");
+
+    // 2. ACTION -> Register the tourist (this is done in the beforeEach for other tests,
+    // but here we do it explicitly to get the transaction result)
+    await touristRegistry.connect(owner).registerTourist(dataHash);
+
+    // 3. OUTPUT -> Call the getter function to retrieve the Digital ID
+    // Note: Assuming your contract has a function like `getDigitalId(bytes32)`
+    const digitalId = await touristRegistry.getDigitalId(dataHash);
+    console.log("      ✨ Generated Digital ID:", digitalId.toString());
+    // 4. VERIFY -> Check if the first registered tourist gets ID 1
+    expect(digitalId).to.equal(1);
+  });
+
   
-
-
 });

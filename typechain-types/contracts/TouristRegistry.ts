@@ -26,6 +26,7 @@ import type {
 export interface TouristRegistryInterface extends Interface {
   getFunction(
     nameOrSignature:
+      | "getDigitalId"
       | "isRegistered"
       | "owner"
       | "registerTourist"
@@ -38,6 +39,10 @@ export interface TouristRegistryInterface extends Interface {
     nameOrSignatureOrTopic: "OwnershipTransferred" | "TouristRegistered"
   ): EventFragment;
 
+  encodeFunctionData(
+    functionFragment: "getDigitalId",
+    values: [BytesLike]
+  ): string;
   encodeFunctionData(
     functionFragment: "isRegistered",
     values: [BytesLike]
@@ -60,6 +65,10 @@ export interface TouristRegistryInterface extends Interface {
     values: [AddressLike]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "getDigitalId",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "isRegistered",
     data: BytesLike
@@ -161,6 +170,8 @@ export interface TouristRegistry extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  getDigitalId: TypedContractMethod<[dataHash: BytesLike], [bigint], "view">;
+
   isRegistered: TypedContractMethod<[dataHash: BytesLike], [boolean], "view">;
 
   owner: TypedContractMethod<[], [string], "view">;
@@ -185,6 +196,9 @@ export interface TouristRegistry extends BaseContract {
     key: string | FunctionFragment
   ): T;
 
+  getFunction(
+    nameOrSignature: "getDigitalId"
+  ): TypedContractMethod<[dataHash: BytesLike], [bigint], "view">;
   getFunction(
     nameOrSignature: "isRegistered"
   ): TypedContractMethod<[dataHash: BytesLike], [boolean], "view">;
